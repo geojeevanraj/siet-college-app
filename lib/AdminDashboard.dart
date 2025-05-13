@@ -79,7 +79,7 @@ class AdminDashboard extends StatelessWidget {
             onTap: () {
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => AddUserPage()),
+                MaterialPageRoute(builder: (context) => AddUserPage(role: "faculty")),
               );
             },
           ),
@@ -90,7 +90,7 @@ class AdminDashboard extends StatelessWidget {
             onTap: () {
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => RemoveUserPage()),
+                MaterialPageRoute(builder: (context) => RemoveUserPage(role: "faculty")),
               );
             },
           ),

@@ -1,5 +1,13 @@
+import 'package:app/AssignAssignmentPage.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'AddUserPage.dart';
+import 'RemoveUserPage.dart';
+import 'ViewStudentsPage.dart';
+import 'ManageTimetablePage.dart';
+import 'PostNoticePage.dart';
+import 'AssignAssignmentPage.dart';
+import 'ManageEventsPage.dart';
 
 class FacultyDashboard extends StatelessWidget {
   final List<Map<String, dynamic>> options = [
@@ -21,12 +29,7 @@ class FacultyDashboard extends StatelessWidget {
       extendBody: true,
       backgroundColor: const Color(0xFFF5F7FA),
       bottomNavigationBar: _buildBottomNavigationBar(),
-      body: Stack(
-        children: [
-          _buildBackground(),
-          _buildContent(context),
-        ],
-      ),
+      body: Stack(children: [_buildBackground(), _buildContent(context)]),
     );
   }
 
@@ -64,9 +67,14 @@ class FacultyDashboard extends StatelessWidget {
                     alignment: WrapAlignment.center,
                     spacing: 20,
                     runSpacing: 20,
-                    children: options.map((item) {
-                      return _buildOptionCard(item['label'], item['icon']);
-                    }).toList(),
+                    children:
+                        options.map((item) {
+                          return _buildOptionCard(
+                            label: item['label'],
+                            icon: item['icon'],
+                            context: context,
+                          );
+                        }).toList(),
                   ),
                 ),
               ),
@@ -77,7 +85,11 @@ class FacultyDashboard extends StatelessWidget {
     );
   }
 
-  Widget _buildOptionCard(String label, IconData icon) {
+  Widget _buildOptionCard({
+    required String label,
+    required IconData icon,
+    required BuildContext context,
+  }) {
     return Container(
       width: 160,
       height: 130,
@@ -86,17 +98,54 @@ class FacultyDashboard extends StatelessWidget {
         borderRadius: BorderRadius.circular(20),
         border: Border.all(color: Colors.white30),
         boxShadow: [
-          BoxShadow(
-            color: Colors.black26,
-            blurRadius: 6,
-            offset: Offset(2, 4),
-          ),
+          BoxShadow(color: Colors.black26, blurRadius: 6, offset: Offset(2, 4)),
         ],
       ),
       child: InkWell(
         borderRadius: BorderRadius.circular(20),
         onTap: () {
-          // TODO: Add functionality
+          if (label == "Add Users") {
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (_) => AddUserPage(role: "student")),
+            );
+          } else if (label == "Remove Users") {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (_) => RemoveUserPage(role: "student"),
+              ),
+            );
+          } else if (label == "View Students") {
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => ViewStudentsPage()),
+            );
+          } else if (label == "Manage Class Timetable") {
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (_) => ManageTimetablePage()),
+            );
+          } else if (label == "Post Notices") {
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (_) => PostNoticePage()),
+            );
+          } else if (label == "Assign Assignments") {
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (_) => AssignAssignmentPage()),
+            );
+          } else if (label == "Manage Events\n& Calendar") {
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (_) => ManageEventsPage()),
+            );
+          } else {
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(content: Text("$label functionality coming soon")),
+            );
+          }
         },
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -123,9 +172,7 @@ class FacultyDashboard extends StatelessWidget {
       decoration: const BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
-        boxShadow: [
-          BoxShadow(color: Colors.black12, blurRadius: 10),
-        ],
+        boxShadow: [BoxShadow(color: Colors.black12, blurRadius: 10)],
       ),
       child: BottomNavigationBar(
         backgroundColor: Colors.transparent,

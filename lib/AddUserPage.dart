@@ -3,6 +3,10 @@ import 'package:http/http.dart' as http;
 import 'dart:convert';
 
 class AddUserPage extends StatefulWidget {
+  final String role; // Accept role from constructor
+
+  AddUserPage({required this.role});
+
   @override
   _AddUserPageState createState() => _AddUserPageState();
 }
@@ -12,7 +16,12 @@ class _AddUserPageState extends State<AddUserPage> {
   final TextEditingController _passwordController = TextEditingController();
 
   Future<void> _addUser() async {
-    final url = Uri.parse('http://10.0.2.2:5000/add_faculty'); // Use 10.0.2.2 for Android emulator
+    final url = Uri.parse(
+      widget.role == "faculty"
+          ? 'http://10.0.2.2:5000/add_faculty'
+          : 'http://10.0.2.2:5000/add_student',
+    );
+
     final response = await http.post(
       url,
       headers: {"Content-Type": "application/json"},
@@ -31,7 +40,7 @@ class _AddUserPageState extends State<AddUserPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text("Add Faculty")),
+      appBar: AppBar(title: Text("Add ${widget.role.capitalize()}")),
       body: Padding(
         padding: const EdgeInsets.all(16),
         child: Column(
@@ -39,10 +48,14 @@ class _AddUserPageState extends State<AddUserPage> {
             TextField(controller: _usernameController, decoration: InputDecoration(labelText: "Username")),
             TextField(controller: _passwordController, decoration: InputDecoration(labelText: "Password"), obscureText: true),
             SizedBox(height: 20),
-            ElevatedButton(onPressed: _addUser, child: Text("Add Faculty")),
+            ElevatedButton(onPressed: _addUser, child: Text("Add ${widget.role.capitalize()}")),
           ],
         ),
       ),
     );
   }
+}
+
+extension StringCasing on String {
+  String capitalize() => this[0].toUpperCase() + substring(1);
 }

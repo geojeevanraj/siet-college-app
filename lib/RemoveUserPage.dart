@@ -3,6 +3,10 @@ import 'package:http/http.dart' as http;
 import 'dart:convert';
 
 class RemoveUserPage extends StatefulWidget {
+  final String role;
+
+  RemoveUserPage({required this.role});
+
   @override
   _RemoveUserPageState createState() => _RemoveUserPageState();
 }
@@ -11,7 +15,12 @@ class _RemoveUserPageState extends State<RemoveUserPage> {
   final TextEditingController _usernameController = TextEditingController();
 
   Future<void> _removeUser() async {
-    final url = Uri.parse('http://10.0.2.2:5000/remove_faculty');
+    final url = Uri.parse(
+      widget.role == "faculty"
+          ? 'http://10.0.2.2:5000/remove_faculty'
+          : 'http://10.0.2.2:5000/remove_student',
+    );
+
     final response = await http.delete(
       url,
       headers: {"Content-Type": "application/json"},
@@ -29,17 +38,21 @@ class _RemoveUserPageState extends State<RemoveUserPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text("Remove Faculty")),
+      appBar: AppBar(title: Text("Remove ${widget.role.capitalize()}")),
       body: Padding(
         padding: const EdgeInsets.all(16),
         child: Column(
           children: [
             TextField(controller: _usernameController, decoration: InputDecoration(labelText: "Username")),
             SizedBox(height: 20),
-            ElevatedButton(onPressed: _removeUser, child: Text("Remove Faculty")),
+            ElevatedButton(onPressed: _removeUser, child: Text("Remove ${widget.role.capitalize()}")),
           ],
         ),
       ),
     );
   }
+}
+
+extension StringCasing on String {
+  String capitalize() => this[0].toUpperCase() + substring(1);
 }

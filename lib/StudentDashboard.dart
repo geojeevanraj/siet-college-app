@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'ViewTimetablePage.dart';
+import 'ViewNoticesPage.dart';
+import 'ViewAssignmentsPage.dart';
+import 'ViewEventsPage.dart';
 
 class StudentDashboard extends StatelessWidget {
   final List<Map<String, dynamic>> options = [
@@ -17,12 +21,7 @@ class StudentDashboard extends StatelessWidget {
       extendBody: true,
       backgroundColor: const Color(0xFFF5F7FA),
       bottomNavigationBar: _buildBottomNavigationBar(),
-      body: Stack(
-        children: [
-          _buildBackground(),
-          _buildContent(context),
-        ],
-      ),
+      body: Stack(children: [_buildBackground(), _buildContent(context)]),
     );
   }
 
@@ -60,9 +59,14 @@ class StudentDashboard extends StatelessWidget {
                     alignment: WrapAlignment.center,
                     spacing: 20,
                     runSpacing: 20,
-                    children: options.map((item) {
-                      return _buildOptionCard(item['label'], item['icon']);
-                    }).toList(),
+                    children:
+                        options.map((item) {
+                          return _buildOptionCard(
+                            item['label'],
+                            item['icon'],
+                            context,
+                          );
+                        }).toList(),
                   ),
                 ),
               ),
@@ -73,7 +77,7 @@ class StudentDashboard extends StatelessWidget {
     );
   }
 
-  Widget _buildOptionCard(String label, IconData icon) {
+  Widget _buildOptionCard(String label, IconData icon, BuildContext context) {
     return Container(
       width: 160,
       height: 130,
@@ -82,17 +86,37 @@ class StudentDashboard extends StatelessWidget {
         borderRadius: BorderRadius.circular(20),
         border: Border.all(color: Colors.white30),
         boxShadow: [
-          BoxShadow(
-            color: Colors.black26,
-            blurRadius: 6,
-            offset: Offset(2, 4),
-          ),
+          BoxShadow(color: Colors.black26, blurRadius: 6, offset: Offset(2, 4)),
         ],
       ),
       child: InkWell(
         borderRadius: BorderRadius.circular(20),
         onTap: () {
-          // TODO: Add functionality
+          if (label == "Timetable") {
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => ViewTimetablePage()),
+            );
+          } else if (label == "Notices/\nAnnouncements") {
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => ViewNoticesPage()),
+            );
+          } else if (label == "Assignment List"){
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => ViewAssignmentsPage()),
+            );
+          } else if (label == "Events/Calendar") {
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => ViewEventsPage()),
+            );
+          } else {
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(content: Text("$label functionality coming soon")),
+            );
+          }
         },
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -119,9 +143,7 @@ class StudentDashboard extends StatelessWidget {
       decoration: const BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
-        boxShadow: [
-          BoxShadow(color: Colors.black12, blurRadius: 10),
-        ],
+        boxShadow: [BoxShadow(color: Colors.black12, blurRadius: 10)],
       ),
       child: BottomNavigationBar(
         backgroundColor: Colors.transparent,
