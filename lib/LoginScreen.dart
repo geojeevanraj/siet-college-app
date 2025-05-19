@@ -14,17 +14,15 @@ class LoginScreen extends StatefulWidget {
 class _LoginScreenState extends State<LoginScreen> {
   final TextEditingController _usernameController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
-  String? _selectedRole;
 
-  final List<String> _roles = ['admin', 'faculty', 'student'];
   bool _isLoading = false;
   String _errorMessage = '';
 
   void _login() async {
-    final username = _usernameController.text;
+    final username = _usernameController.text.trim();
     final password = _passwordController.text;
 
-    if (username.isEmpty || password.isEmpty || _selectedRole == null) {
+    if (username.isEmpty || password.isEmpty) {
       setState(() {
         _errorMessage = "Please fill all fields";
       });
@@ -36,15 +34,13 @@ class _LoginScreenState extends State<LoginScreen> {
       _errorMessage = '';
     });
 
-    final url = Uri.parse("http://10.0.2.2:5000/login"); // for Android emulator
-    // final url = Uri.parse("http://192.168.137.1/login");
+    final url = Uri.parse("http://10.0.2.2:5000/login"); // Android emulator
     final response = await http.post(
       url,
       headers: {"Content-Type": "application/json"},
       body: jsonEncode({
         "username": username,
         "password": password,
-        "role": _selectedRole
       }),
     );
 
@@ -55,12 +51,17 @@ class _LoginScreenState extends State<LoginScreen> {
     });
 
     if (data['success']) {
-      if (_selectedRole == 'admin') {
-        Navigator.push(context, MaterialPageRoute(builder: (_) => AdminDashboard()));
-      } else if (_selectedRole == 'faculty') {
-        Navigator.push(context, MaterialPageRoute(builder: (_) => FacultyDashboard()));
-      } else if (_selectedRole == 'student') {
-        Navigator.push(context, MaterialPageRoute(builder: (_) => StudentDashboard()));
+      String role = data['role'];
+      if (role == 'admin') {
+        Navigator.pushReplacement(context, MaterialPageRoute(builder: (_) => (AdminDashboard(username: username))));
+      } else if (role == 'faculty') {
+        Navigator.pushReplacement(context, MaterialPageRoute(builder: (_) => FacultyDashboard()));
+      } else if (role == 'student') {
+        Navigator.pushReplacement(context, MaterialPageRoute(builder: (_) => StudentDashboard()));
+      } else {
+        setState(() {
+          _errorMessage = "Unknown role: $role";
+        });
       }
     } else {
       setState(() {
@@ -97,21 +98,6 @@ class _LoginScreenState extends State<LoginScreen> {
                       controller: _passwordController,
                       decoration: InputDecoration(labelText: 'Password'),
                       obscureText: true,
-                    ),
-                    DropdownButtonFormField<String>(
-                      value: _selectedRole,
-                      items: _roles.map((role) {
-                        return DropdownMenuItem(
-                          value: role,
-                          child: Text(role),
-                        );
-                      }).toList(),
-                      onChanged: (value) {
-                        setState(() {
-                          _selectedRole = value;
-                        });
-                      },
-                      decoration: InputDecoration(labelText: 'Role'),
                     ),
                     const SizedBox(height: 20),
                     if (_errorMessage.isNotEmpty)
