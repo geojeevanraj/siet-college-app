@@ -57,7 +57,7 @@ class _LoginScreenState extends State<LoginScreen> {
       if (role == 'admin') {
         Navigator.pushReplacement(context, MaterialPageRoute(builder: (_) => (AdminDashboard(username: username))));
       } else if (role == 'faculty') {
-        Navigator.pushReplacement(context, MaterialPageRoute(builder: (_) => FacultyDashboard()));
+        Navigator.pushReplacement(context, MaterialPageRoute(builder: (_) => FacultyDashboard(username: username, role: role,)));
       } else if (role == 'student') {
         Navigator.pushReplacement(context, MaterialPageRoute(builder: (_) => StudentDashboard()));
       } else {
