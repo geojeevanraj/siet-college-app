@@ -2,6 +2,7 @@
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
+import 'constants.dart';
 
 class ViewNoticesPage extends StatefulWidget {
   @override
@@ -13,6 +14,7 @@ class _ViewNoticesPageState extends State<ViewNoticesPage> {
 
   Future<void> fetchNotices() async {
     final url = Uri.parse('http://10.0.2.2:5000/get_notices');
+    // final url = Uri.parse('$baseURL/get_notices');
     final response = await http.get(url);
 
     if (response.statusCode == 200) {

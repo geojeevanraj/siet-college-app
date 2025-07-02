@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
+import 'constants.dart';
 
 class ManageTimetablePage extends StatefulWidget {
   @override
@@ -23,15 +24,16 @@ class _ManageTimetablePageState extends State<ManageTimetablePage> {
 
   Future<void> _updateTimetable() async {
     final url = Uri.parse('http://10.0.2.2:5000/update_timetable');
+    // final url = Uri.parse('$baseURL/update_timetable');
     final response = await http.post(
       url,
       headers: {"Content-Type": "application/json"},
       body: json.encode({"day": _dayController.text, "classes": _classes}),
     );
     final result = json.decode(response.body);
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text(result['message'])),
-    );
+    ScaffoldMessenger.of(
+      context,
+    ).showSnackBar(SnackBar(content: Text(result['message'])));
   }
 
   @override
@@ -42,13 +44,28 @@ class _ManageTimetablePageState extends State<ManageTimetablePage> {
         padding: const EdgeInsets.all(16),
         child: Column(
           children: [
-            TextField(controller: _dayController, decoration: InputDecoration(labelText: "Day (e.g. Monday)")),
-            TextField(onChanged: (v) => _time = v, decoration: InputDecoration(labelText: "Time")),
-            TextField(onChanged: (v) => _subject = v, decoration: InputDecoration(labelText: "Subject")),
-            TextField(onChanged: (v) => _room = v, decoration: InputDecoration(labelText: "Room")),
+            TextField(
+              controller: _dayController,
+              decoration: InputDecoration(labelText: "Day (e.g. Monday)"),
+            ),
+            TextField(
+              onChanged: (v) => _time = v,
+              decoration: InputDecoration(labelText: "Time"),
+            ),
+            TextField(
+              onChanged: (v) => _subject = v,
+              decoration: InputDecoration(labelText: "Subject"),
+            ),
+            TextField(
+              onChanged: (v) => _room = v,
+              decoration: InputDecoration(labelText: "Room"),
+            ),
             ElevatedButton(onPressed: _addClassEntry, child: Text("Add Class")),
             SizedBox(height: 10),
-            ElevatedButton(onPressed: _updateTimetable, child: Text("Update Timetable")),
+            ElevatedButton(
+              onPressed: _updateTimetable,
+              child: Text("Update Timetable"),
+            ),
           ],
         ),
       ),

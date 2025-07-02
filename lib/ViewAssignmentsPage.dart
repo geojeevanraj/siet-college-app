@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
+import 'constants.dart';
 
 class ViewAssignmentsPage extends StatefulWidget {
   @override
@@ -18,6 +19,7 @@ class _ViewAssignmentsPageState extends State<ViewAssignmentsPage> {
 
   Future<void> fetchAssignments() async {
     final response = await http.get(Uri.parse('http://10.0.2.2:5000/get_assignments'));
+    // final response = await http.get(Uri.parse('$baseURL/get_assignments'));
     final data = jsonDecode(response.body);
     setState(() {
       assignments = data['assignments'];

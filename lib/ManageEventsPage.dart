@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
+import 'constants.dart';
 
 class ManageEventsPage extends StatefulWidget {
   @override
@@ -15,6 +16,7 @@ class _ManageEventsPageState extends State<ManageEventsPage> {
   Future<void> _postEvent() async {
     final response = await http.post(
       Uri.parse('http://10.0.2.2:5000/add_event'),
+      // Uri.parse('$baseURL/add_event'),
       headers: {'Content-Type': 'application/json'},
       body: jsonEncode({
         'title': titleController.text,
@@ -44,14 +46,20 @@ class _ManageEventsPageState extends State<ManageEventsPage> {
         padding: const EdgeInsets.all(16),
         child: Column(
           children: [
-            TextField(controller: titleController, decoration: InputDecoration(labelText: 'Event Title')),
-            TextField(controller: descriptionController, decoration: InputDecoration(labelText: 'Description')),
-            TextField(controller: dateController, decoration: InputDecoration(labelText: 'Date (YYYY-MM-DD)')),
-            SizedBox(height: 20),
-            ElevatedButton(
-              onPressed: _postEvent,
-              child: Text('Post Event'),
+            TextField(
+              controller: titleController,
+              decoration: InputDecoration(labelText: 'Event Title'),
             ),
+            TextField(
+              controller: descriptionController,
+              decoration: InputDecoration(labelText: 'Description'),
+            ),
+            TextField(
+              controller: dateController,
+              decoration: InputDecoration(labelText: 'Date (YYYY-MM-DD)'),
+            ),
+            SizedBox(height: 20),
+            ElevatedButton(onPressed: _postEvent, child: Text('Post Event')),
           ],
         ),
       ),

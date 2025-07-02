@@ -30,15 +30,23 @@ def login():
         "username": username
     })
 
-    if user and bcrypt.checkpw(password.encode('utf-8'), user['password'].encode('utf-8')):
-        return jsonify({
-            "success": True,
-            "message": "Login successful",
-            "role": user["role"],     # Return role from database
-            "name": user["username"]      # Optional: Send name for profile
-        })
-    else:
-        return jsonify({"success": False, "message": "Invalid credentials"}), 401
+    if user:
+        stored_password = user['password']
+
+        # Convert to bytes if stored as string
+        if isinstance(stored_password, str):
+            stored_password = stored_password.encode('utf-8')
+
+        if bcrypt.checkpw(password.encode('utf-8'), stored_password):
+            return jsonify({
+                "success": True,
+                "message": "Login successful",
+                "role": user["role"],     # Return role from database
+                "name": user["username"]  # Optional: Send name for profile
+            })
+
+    return jsonify({"success": False, "message": "Invalid credentials"}), 401
+
 
 
 @app.route('/add_faculty', methods=['POST'])
@@ -221,25 +229,34 @@ def get_events():
 def change_password():
     data = request.get_json()
     username = data.get('username')
-    current_password = data.get('password')  # ← must be 'password'
+    current_password = data.get('current_password')
     new_password = data.get('new_password')
 
-    if not all([username, current_password, new_password]):
-        return jsonify({"success": False, "message": "Missing fields"}), 400
+    if not username or not current_password or not new_password:
+        return jsonify({"success": False, "message": "Missing field(s)"}), 400
 
     user = users_collection.find_one({"username": username})
     if not user:
         return jsonify({"success": False, "message": "User not found"}), 404
 
-    if not bcrypt.checkpw(current_password.encode('utf-8'), user['password'].encode('utf-8')):
+    stored_password = user['password']
+
+    # Convert to bytes if stored as string
+    if isinstance(stored_password, str):
+        stored_password = stored_password.encode('utf-8')
+
+    if bcrypt.checkpw(current_password.encode('utf-8'), stored_password):
+        hashed_new = bcrypt.hashpw(new_password.encode('utf-8'), bcrypt.gensalt())
+
+        users_collection.update_one(
+            {"username": username},
+            {"$set": {"password": hashed_new}}
+        )
+
+        return jsonify({"success": True, "message": "Password changed successfully"})
+    else:
         return jsonify({"success": False, "message": "Current password incorrect"}), 401
-
-    # Hash new password and update
-    hashed = bcrypt.hashpw(new_password.encode('utf-8'), bcrypt.gensalt()).decode('utf-8')
-    users_collection.update_one({"username": username}, {"$set": {"password": hashed}})
-
-    return jsonify({"success": True, "message": "Password updated successfully"})
-
+    
 @app.route('/get_user_info', methods=['POST'])
 def get_user_info():
     data = request.get_json()

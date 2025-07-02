@@ -2,6 +2,7 @@
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
+import 'constants.dart';
 
 class PostNoticePage extends StatefulWidget {
   @override
@@ -15,6 +16,7 @@ class _PostNoticePageState extends State<PostNoticePage> {
 
   Future<void> _postNotice() async {
     final url = Uri.parse('http://10.0.2.2:5000/post_notice');
+    // final url = Uri.parse('$baseURL/post_notice');
     final response = await http.post(
       url,
       headers: {'Content-Type': 'application/json'},

@@ -5,6 +5,7 @@ import 'dart:convert';
 import 'AdminDashboard.dart';
 import 'FacultyDashboard.dart';
 import 'StudentDashboard.dart';
+import 'constants.dart';
 
 class LoginScreen extends StatefulWidget {
   @override
@@ -35,6 +36,7 @@ class _LoginScreenState extends State<LoginScreen> {
     });
 
     final url = Uri.parse("http://10.0.2.2:5000/login"); // Android emulator
+    // final url = Uri.parse("$baseURL/login"); //Real device
     final response = await http.post(
       url,
       headers: {"Content-Type": "application/json"},

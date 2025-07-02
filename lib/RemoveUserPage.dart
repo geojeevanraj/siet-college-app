@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
+import 'constants.dart';
 
 class RemoveUserPage extends StatefulWidget {
   final String role;
@@ -19,6 +20,8 @@ class _RemoveUserPageState extends State<RemoveUserPage> {
       widget.role == "faculty"
           ? 'http://10.0.2.2:5000/remove_faculty'
           : 'http://10.0.2.2:5000/remove_student',
+          // ? '$baseURL/remove_faculty'
+          // : '$baseURL/remove_student',
     );
 
     final response = await http.delete(

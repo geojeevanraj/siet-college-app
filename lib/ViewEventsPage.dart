@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
+import 'constants.dart';
 
 class ViewEventsPage extends StatefulWidget {
   @override
@@ -12,6 +13,7 @@ class _ViewEventsPageState extends State<ViewEventsPage> {
 
   Future<void> _fetchEvents() async {
     final response = await http.get(Uri.parse('http://10.0.2.2:5000/get_events'));
+    // final response = await http.get(Uri.parse('$baseURL/get_events'));
 
     if (response.statusCode == 200) {
       final data = jsonDecode(response.body);

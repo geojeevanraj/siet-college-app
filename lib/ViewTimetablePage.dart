@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
+import 'constants.dart';
 
 class ViewTimetablePage extends StatefulWidget {
   @override
@@ -12,6 +13,7 @@ class _ViewTimetablePageState extends State<ViewTimetablePage> {
 
   Future<void> fetchTimetable() async {
     final response = await http.get(Uri.parse('http://10.0.2.2:5000/get_timetable'));
+    // final response = await http.get(Uri.parse('$baseURL/get_timetable'));
     final result = json.decode(response.body);
     if (result['success']) {
       setState(() {

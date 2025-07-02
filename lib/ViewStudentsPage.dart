@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
+import 'constants.dart';
 
 class ViewStudentsPage extends StatefulWidget {
   @override
@@ -19,6 +20,7 @@ class _ViewStudentsPageState extends State<ViewStudentsPage> {
 
   Future<void> fetchStudents() async {
     final url = Uri.parse('http://10.0.2.2:5000/get_students');
+    // final url = Uri.parse('$baseURL/get_students');
     final response = await http.get(url);
 
     if (response.statusCode == 200) {
