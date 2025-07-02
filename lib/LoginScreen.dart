@@ -59,7 +59,7 @@ class _LoginScreenState extends State<LoginScreen> {
       } else if (role == 'faculty') {
         Navigator.pushReplacement(context, MaterialPageRoute(builder: (_) => FacultyDashboard(username: username, role: role,)));
       } else if (role == 'student') {
-        Navigator.pushReplacement(context, MaterialPageRoute(builder: (_) => StudentDashboard()));
+        Navigator.pushReplacement(context, MaterialPageRoute(builder: (_) => StudentDashboard(username: username, role: role,)));
       } else {
         setState(() {
           _errorMessage = "Unknown role: $role";
